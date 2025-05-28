@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerm dance</title>
+</head>
+<body>
+    <header>
+        <h3 id="timerSec">0</h3>
+        <h3 id="timerDay">0</h3>
+    </header>
+    <div class="content">
+        <div class="input-content">
+            <input class="name-inp" id="taskName" placeholder="Task name" required>
+            <input class="time-inp" type="number" id="taskInterval" placeholder="Interval count" required>
+            <span class="intervals">Intervals
+                <input type="checkbox" id="isInterval">
+            </span>
+            <button id="createTask" class="create-btn">Create</button>
+        </div>
+        <div id="tasks"></div>
+    </div>
+
+    <script type="module" src="code.js"></script>
+</body>
+</html>

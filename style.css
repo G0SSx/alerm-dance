@@ -1,0 +1,103 @@
+header {
+    background-color: #f0d8ac;
+    display: flex;
+    justify-content: center;
+    column-gap: 100px;
+}
+
+span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    border-color: #9c7261;
+    border-radius: 25px;
+    background-color: transparent;
+    padding-left: 10px;
+    height: 20px;
+}
+
+button {
+    background-color: #f0d8ac;
+    height: 35px;
+    min-width: 100px;
+    max-width: 200px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: none;
+    border-radius: 10px;
+    color: #875c62;
+    font-size: 15px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #f6e8d6;
+    margin: 0px;
+    color: #875c62;
+    font-size: 17px;
+}
+
+.content {
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-top: 20px;
+}
+
+.input-content {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.name-inp {
+    flex-grow: 5;
+}
+
+.time-inp {
+    flex-grow: 1;
+}
+
+.intervals {
+    flex-grow: 1;
+}
+
+.create-btn {
+    flex-grow: 1.5;
+}
+
+#tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.task {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.task-name {
+    flex-grow: 5;
+    display: inline;
+    max-height: 50px;
+}
+
+.task-time {
+    flex-grow: 1.5;
+}
+
+.task-stop-btn {
+    width: 80px;
+}
+
+.task-delete-btn {
+    background-color: #9c7261;
+    color: #f0d8ac;
+    width: 80px;
+}
