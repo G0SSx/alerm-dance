@@ -1,0 +1,14 @@
+[
+    {
+        "name": "15 hours",
+        "times": 15,
+        "isActive": true,
+        "isInterval": false
+    },
+    {
+        "name": "2 intervals",
+        "times": 2,
+        "isActive": true,
+        "isInterval": true
+    }
+]

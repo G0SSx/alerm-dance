@@ -1,6 +1,7 @@
 const toMs = 1000
 const dayTimeSec = 24
 const dayTimeMs = dayTimeSec * toMs
+const dataPath = "data.json"
 
 let currentTime = 0
 let currentDay = 0
@@ -15,79 +16,111 @@ let taskTimeInput = document.getElementById("taskInterval")
 let intervalCheckbox = document.getElementById("isInterval")
 let addTaskButton = document.getElementById("createTask");
 
-(function awake() {
+(async function awake() {
     subscribeTaskCreationButton()
-})();
-
-(function start() {
+    await loadNotifications()
     updateTime()
 })();
+
+async function loadNotifications() {
+    await fetch(dataPath)
+        .then(response => response.json())
+        .then(values => values.forEach(value => {
+            notifications.set(notificationsCount.toString(), value)
+            createAlert(
+                value.name, 
+                countAlertTime(value.times, value.isInterval), 
+                value.isActive, 
+                value.isInterval)
+            
+            // current bug: (should be fixed)
+            // doesn't set time depend on interval or not
+            // isn't correct behaviour for interval notifications
+            
+            notificationsCount++
+        }))
+
+    // onTaskStateUpdate() to update json data
+}
 
 function subscribeTaskCreationButton() {
     addTaskButton.addEventListener("click", function () {
         if (taskNameInput.value === "") return
         if (taskTimeInput.value === "" || taskTimeInput.value < 1) return
         
-        let time = parseInt(taskTimeInput.value.trim())
-        let name = taskNameInput.value.trim()
-        let isInterval = intervalCheckbox.checked;
-        let timeText;
-
-        if (isInterval) {
-            time = Math.ceil(dayTimeSec / time)
-            timeText = "Notification count: " + time
-        } else {
-            timeText = "Notification time: " + time
-        }
-
-        notifications.set(notificationsCount.toString(), {
-            name: name,
-            times: time,
-            isActive: true,
-            isInterval: isInterval
-        })
-        
-        // HTML
-        let task = document.createElement("div")
-        task.id = notificationsCount
-        task.className = "task"
-        let nameSpan = document.createElement("span")
-        nameSpan.textContent = name
-        nameSpan.className = "task-name"
-        let timeSpan = document.createElement("span")
-        timeSpan.textContent = timeText
-        timeSpan.className = "task-time"
-        let deleteButton = document.createElement("button")
-        deleteButton.textContent = "delete"
-        deleteButton.className = "task-delete-btn"
-        let stopButton = document.createElement("button")
-        stopButton.textContent = "stop"
-        stopButton.className = "task-stop-btn"
-
-        // APPEND
-        taskContainer.appendChild(task)
-        task.appendChild(nameSpan)
-        task.appendChild(timeSpan)
-        task.appendChild(stopButton)
-        task.appendChild(deleteButton)
-
-        // EVENTS
-        deleteButton.addEventListener("click", function () {
-            notifications.delete(this.parentElement.id)
-            this.parentElement.remove()
-        })
-
-        stopButton.addEventListener("click", function () {
-            let notification = notifications.get(this.parentElement.id)
-            notification.isActive = false
-        })
-
-        // RESET
-        taskNameInput.value = ""
-        taskTimeInput.value = ""
-        notificationsCount++
-        intervalCheckbox.checked = false
+        createAlertFromButton()
     })
+}
+
+function createAlertFromButton() {
+    let name = taskNameInput.value.trim()
+    let isInterval = intervalCheckbox.checked;
+    
+    createAlert(
+        name, 
+        countAlertTime(getInputTime(), isInterval), 
+        true, 
+        isInterval)
+}
+
+function getInputTime() {
+    return parseInt(taskTimeInput.value.trim())
+}
+
+function countAlertTime(times, isInterval) {
+    return isInterval ? Math.ceil(dayTimeSec / times) : times
+}
+
+function createAlert(name, times, isActive, isInterval) {
+    notifications.set(notificationsCount.toString(), {
+        name: name,
+        times: times,
+        isActive: isActive,
+        isInterval: isInterval
+    })
+    
+    // HTML
+    let task = document.createElement("div")
+    task.id = notificationsCount
+    task.className = "task"
+    let nameSpan = document.createElement("span")
+    nameSpan.textContent = name
+    nameSpan.className = "task-name"
+    let timeSpan = document.createElement("span")
+    timeSpan.textContent = isInterval 
+        ? "Notification count: " + (dayTimeSec / times)
+        : "Notification time: " + times
+    timeSpan.className = "task-time"
+    let deleteButton = document.createElement("button")
+    deleteButton.textContent = "delete"
+    deleteButton.className = "task-delete-btn"
+    let stopButton = document.createElement("button")
+    stopButton.textContent = "stop"
+    stopButton.className = "task-stop-btn"
+
+    // APPEND
+    taskContainer.appendChild(task)
+    task.appendChild(nameSpan)
+    task.appendChild(timeSpan)
+    task.appendChild(stopButton)
+    task.appendChild(deleteButton)
+
+    // EVENTS
+    deleteButton.addEventListener("click", function () {
+        notifications.delete(this.parentElement.id)
+        this.parentElement.remove()
+    })
+
+    stopButton.addEventListener("click", function () {
+        let notification = notifications.get(this.parentElement.id)
+        notification.isActive = false
+    })
+
+    // RESET
+    taskNameInput.value = ""
+    taskTimeInput.value = ""
+    notificationsCount++
+    intervalCheckbox.checked = false
 }
 
 async function updateTime() {
