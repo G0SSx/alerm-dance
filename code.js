@@ -43,13 +43,34 @@ async function loadNotifications() {
     // onTaskStateUpdate() to update json data
 }
 
-function subscribeTaskCreationButton() {
-    addTaskButton.addEventListener("click", function () {
-        if (taskNameInput.value === "") return
-        if (taskTimeInput.value === "" || taskTimeInput.value < 1) return
-        
-        createAlertFromButton()
-    })
+function saveNotifications() {
+    // Save full map
+    let jsonData = JSON.stringify(notifications)
+    const fs = require("fs");
+    
+    fs.writeFile("data.json", jsonData, (err) => {
+        if (err) {
+            console.error("Error saving: ", err);
+        } else {
+            console.log("Saved");
+        }
+    });
+
+    // Save a line of an object
+    // 
+}
+
+function saveNotification(id) {
+    // Save an object
+    let jsonData = JSON.stringify(notifications.get(id))
+
+}
+
+function saveNotificationProperty(id, propery) {
+    let jsonData = JSON.stringify()
+
+    // find object in json file by id
+    // might need to save ids along with objects
 }
 
 function createAlertFromButton() {
@@ -61,14 +82,9 @@ function createAlertFromButton() {
         countAlertTime(getInputTime(), isInterval), 
         true, 
         isInterval)
-}
 
-function getInputTime() {
-    return parseInt(taskTimeInput.value.trim())
-}
-
-function countAlertTime(times, isInterval) {
-    return isInterval ? Math.ceil(dayTimeSec / times) : times
+    // SAVE 
+    saveNotifications()
 }
 
 function createAlert(name, times, isActive, isInterval) {
@@ -154,6 +170,23 @@ async function updateTime() {
     currentDay++
     for (let [_, notification] of notifications) notification.isActive = true
     updateTime()
+}
+
+function subscribeTaskCreationButton() {
+    addTaskButton.addEventListener("click", function () {
+        if (taskNameInput.value === "") return
+        if (taskTimeInput.value === "" || taskTimeInput.value < 1) return
+        
+        createAlertFromButton()
+    })
+}
+
+function getInputTime() {
+    return parseInt(taskTimeInput.value.trim())
+}
+
+function countAlertTime(times, isInterval) {
+    return isInterval ? Math.ceil(dayTimeSec / times) : times
 }
 
 function delay(ms) {
